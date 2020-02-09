@@ -1,25 +1,27 @@
-import React, { Component } from 'react';
-import Button from './Button'
+import React, { Component } from 'react'
+// import Button from './Button'
+import { List, Button } from 'semantic-ui-react'
 
-export default class List extends Component {
-
-  render() {
-    const { onClick, list, buttonText } = this.props;
-    if ({ list }) {
-      return (
-        <div >
-          <ul  Style={"list-style-type:none"} >{list.map((item,index) =>
-            <li  key={'item_'+index}>
-              <div className="ui right labeled button">
-                
-                <Button onClick = {()=>onClick(index,item)} className="ui green button" text ={buttonText}></Button>
-              <h3 className ="ui basic label">{item}</h3>
-              </div>
-            </li>
-          )}
-          </ul>
-        </div>
-      );
-    }
-  }
+export default class Lists extends Component {
+	render() {
+		const { onClick,list, deleteTodoItem, filter } = this.props
+		if ( list ) {
+			let filteredList = list.filter((el) => el.todoStatus === filter)
+			let buttonText = filter==='checked'?'Move to Todo':'Done'
+			return (
+				<div >
+					<List >{filteredList.map((item) =>
+						<List.Item key={item.todoId}>
+							<div className="ui right labeled button">
+								<h3 className ="ui basic label">{item.todoText}</h3>
+								<Button onClick = {()=>onClick(item)} className="ui green basic button" >{buttonText}</Button>
+								<Button onClick = {()=>deleteTodoItem(item)} className="ui red basic button" >Remove</Button>
+							</div>
+						</List.Item>
+					)}
+					</List>
+				</div>
+			)
+		}
+	}
 }

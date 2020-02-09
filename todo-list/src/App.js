@@ -1,82 +1,97 @@
-import React, { Component } from 'react';
-import List from './List';
-import Form from './Form';
+import React, { Component } from 'react'
+import Form from './Form'
+import {patchItem} from './todoWebApiUtils'
+import {deleteItem} from './todoWebApiUtils'
+import {getList} from './todoWebApiUtils'
+import Lists from './List'
 
 export default class Todo extends Component {
 
-  constructor(props) {
-    super(props);
-    this.initialState = {
-      todoList: [],
-      completedList: [],
-    };
-    this.state = this.initialState;
-    this.handleChange = this.handleChange.bind(this);
-    this.handelSubmit = this.handelSubmit.bind(this);
-    this.markDone = this.markDone.bind(this);
-    this.moveToTodo = this.moveToTodo.bind(this);
-  }
+	constructor(props) {
+		super(props)
+		this.initialState = {
+			// todoList: []
+			todoList: getList(),
+		}
 
-  handleChange = (event) => {
-    this.setState({
-      item: event.target.value
-    });
-  }
+		this.state = this.initialState
+		this.handelSubmit = this.handelSubmit.bind(this)
+		this.toggleTodoStatus = this.toggleTodoStatus.bind(this)
+		this.deleteTodoItem = this.deleteTodoItem.bind(this)
+	}
 
-  handelSubmit = (item) => {
-    this.setState({
-      todoList: [...this.state.todoList, item],
-      item: '',
-    });
-  }
+	handelSubmit = (item) => {
+		this.setState({
+			todoList: [...this.state.todoList, item],
+		})
+	}
 
-  markDone = (index, item) => {
-    const { todoList } = this.state;
+	toggleTodoStatus = (item) => {
+		const { todoList } = this.state
+		// Change the todoStatus of the item
+		item.todoStatus = (item.todoStatus === 'checked') ? 'unchecked' : 'checked'
+		// call Api to patch item and receive an updated item
+		// TODO: add if(response == 201)
+		var newItem = patchItem(item)
+		// find the index of the original item
+		var index = todoList.findIndex(el => el.todoId === newItem.todoId)
+		// Replace the original item with the new item
+		todoList.splice(index, 1, newItem)
 
-    this.setState({
-      completedList: [...this.state.completedList, item],
-      todoList: todoList.filter((character,i) => {
-        return i !== index;
-      }),
-      
-    });
-  }
+		this.setState({
+			todoList: todoList
+		})
+	}
 
-  moveToTodo = (index, item) => {
-    const {  completedList } = this.state;
+	deleteTodoItem = (item) => {
+		const { todoList } = this.state
+		// call Api to delete item 
+		deleteItem(item)
+		// find the index of the original item
+		// TODO: add if(resopnse == 200)
+		var index = todoList.findIndex(el => el.todoId === item.todoId)
+		// Delete the original item 
+		todoList.splice(index, 1)
 
-    this.setState({
-      todoList: [...this.state.todoList, item],
-      completedList: completedList.filter((character,i) => {
-        return i !== index;
-      }),
-      
-    });
-  }
-  
+		this.setState({
+			todoList: todoList
+		})
+	}
 
-  render() {
-    const { todoList, completedList } = this.state;
-    return (
-      <div className=' ui container'>
-        <div className=' ui segment'>
-          <h1 className='ui center aligned header'>Todo List App</h1>
-          <div className="ui divider"></div>
-          <div>
-            <Form handelSubmit={this.handelSubmit} ></Form>
-          </div>
-          <div>
-            <div className="ui horizontal divider"><h4 className="ui header">Todo Items</h4></div>
-            <List buttonText='Done' onClick={this.markDone} list={todoList}></List>
-          </div>
+	render() {
+		const { todoList } = this.state
+		return (
+			<div className=' ui container'>
+				<div className=' ui segment'>
+					<h1 className='ui center aligned header'>Todo List App</h1>
+					<div className="ui divider"></div>
+					<div>
+						<Form handelSubmit={this.handelSubmit} ></Form>
+					</div>
 
-          <div>
-            <div className="ui horizontal divider"><h4 className="ui header">Completed Items</h4></div>
-            <List buttonText='Move to Todo' onClick={this.moveToTodo} list={completedList}></List>
-          </div>
-
-        </div>
-      </div>
-    );
-  }
+					<div>
+						<div className="ui horizontal divider"><h4 className="ui header">Todo Items</h4></div>
+						<Lists
+							deleteTodoItem = {this.deleteTodoItem}
+							onClick={this.toggleTodoStatus}
+							list={todoList}
+							filter = "unchecked"
+						>
+						</Lists>
+					</div>
+					
+					<div>
+						<div className="ui horizontal divider"><h4 className="ui header">Completed Items</h4></div>
+						<Lists
+							deleteTodoItem = {this.deleteTodoItem}
+							onClick={this.toggleTodoStatus}
+							list={todoList}
+							filter="checked"
+						>
+						</Lists>
+					</div>
+				</div>
+			</div>
+		)
+	}
 }
