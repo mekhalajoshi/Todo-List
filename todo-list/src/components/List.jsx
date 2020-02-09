@@ -4,8 +4,9 @@ import { List, Button } from 'semantic-ui-react'
 
 export default class Lists extends Component {
 	render() {
-		const { onClick,list, deleteTodoItem, filter } = this.props
-		if ( list ) {
+		const { onClick, list, deleteTodoItem, filter } = this.props
+
+		if (list) {
 			let filteredList = list.filter((el) => el.todoStatus === filter)
 			let buttonText = filter==='checked'?'Move to Todo':'Done'
 			return (
@@ -22,6 +23,8 @@ export default class Lists extends Component {
 					</List>
 				</div>
 			)
+		} else {
+			return
 		}
 	}
 }

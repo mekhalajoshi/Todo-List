@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import Button from './Button'
-import {addItem} from './todoWebApiUtils'
 import nanoid from 'nanoid'
 
 export default class Form extends Component {
@@ -31,9 +30,8 @@ export default class Form extends Component {
 
 	handleClick = () => {
 		if (this.state.item) {
-			let newItem = addItem(this.state.item)
 			// TODO: add if (response == 201)
-			this.props.handelSubmit(newItem)
+			this.props.handelSubmit(this.state.item)
 			this.setState({
 				item: this.createNewTodoItem()
 			})

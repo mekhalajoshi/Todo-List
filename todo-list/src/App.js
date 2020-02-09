@@ -1,65 +1,58 @@
 import React, { Component } from 'react'
-import Form from './Form'
-import {patchItem} from './todoWebApiUtils'
-import {deleteItem} from './todoWebApiUtils'
-import {getList} from './todoWebApiUtils'
-import Lists from './List'
+import Form from './components/Form'
+import Lists from './components/List'
+import TodoStore from './TodoStore'
+import TodoActionCreators from './TodoActionCreators'
+
+// Private function that gets values from store
+function getStateFromStore() {
+	return {
+		todoList: TodoStore.getTodoList()
+	}
+}
 
 export default class Todo extends Component {
 
 	constructor(props) {
 		super(props)
-		this.initialState = {
-			// todoList: []
-			todoList: getList(),
-		}
+		this.state = getStateFromStore()
 
-		this.state = this.initialState
+		this.onChange = this.onChange.bind(this)
 		this.handelSubmit = this.handelSubmit.bind(this)
 		this.toggleTodoStatus = this.toggleTodoStatus.bind(this)
 		this.deleteTodoItem = this.deleteTodoItem.bind(this)
 	}
 
+	// Store uses this as callback fn when store is updated
+	onChange() {
+		this.setState(getStateFromStore())
+	}
+
+	// Subscribe to store events on mount
+	componentDidMount() {
+		TodoStore.addChangeListener(this.onChange)
+		TodoActionCreators.getTodoList()
+	}
+
+	// Un-Subscribe to store events on un-mount
+	componentWillUnmount() {
+		TodoStore.removeChangeListener(this.onChange)
+	}
+
 	handelSubmit = (item) => {
-		this.setState({
-			todoList: [...this.state.todoList, item],
-		})
+		TodoActionCreators.createTodoItem(item)
 	}
 
 	toggleTodoStatus = (item) => {
-		const { todoList } = this.state
-		// Change the todoStatus of the item
 		item.todoStatus = (item.todoStatus === 'checked') ? 'unchecked' : 'checked'
-		// call Api to patch item and receive an updated item
-		// TODO: add if(response == 201)
-		var newItem = patchItem(item)
-		// find the index of the original item
-		var index = todoList.findIndex(el => el.todoId === newItem.todoId)
-		// Replace the original item with the new item
-		todoList.splice(index, 1, newItem)
-
-		this.setState({
-			todoList: todoList
-		})
+		TodoActionCreators.updateTodoItem(item)
 	}
 
 	deleteTodoItem = (item) => {
-		const { todoList } = this.state
-		// call Api to delete item 
-		deleteItem(item)
-		// find the index of the original item
-		// TODO: add if(resopnse == 200)
-		var index = todoList.findIndex(el => el.todoId === item.todoId)
-		// Delete the original item 
-		todoList.splice(index, 1)
-
-		this.setState({
-			todoList: todoList
-		})
+		TodoActionCreators.deleteTodoItem(item)
 	}
 
 	render() {
-		const { todoList } = this.state
 		return (
 			<div className=' ui container'>
 				<div className=' ui segment'>
@@ -74,7 +67,7 @@ export default class Todo extends Component {
 						<Lists
 							deleteTodoItem = {this.deleteTodoItem}
 							onClick={this.toggleTodoStatus}
-							list={todoList}
+							list={this.state.todoList}
 							filter = "unchecked"
 						>
 						</Lists>
@@ -85,7 +78,7 @@ export default class Todo extends Component {
 						<Lists
 							deleteTodoItem = {this.deleteTodoItem}
 							onClick={this.toggleTodoStatus}
-							list={todoList}
+							list={this.state.todoList}
 							filter="checked"
 						>
 						</Lists>
