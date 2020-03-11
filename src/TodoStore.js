@@ -2,7 +2,7 @@
 import { EventEmitter } from 'events'
 import assign from 'object-assign'
 
-import { getList, addItem, patchItem, deleteItem } from './TodoWebAPIUtils'
+import { getList, addItem, patchItem, deleteItem } from './TodoWebApiUtils'
 import AppDispatcher from './utils/AppDispatcher'
 import ActionTypes from './utils/ActionTypes'
 
