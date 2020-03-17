@@ -1,5 +1,5 @@
 
-# ToDo-List [![Build Status](https://api.travis-ci.com/mekhalajoshi/CICD.svg?branch=master)](https://travis-ci.com/github/mekhalajoshi/CICD/builds)
+# ToDo-List [![Build Status](https://travis-ci.com/mekhalajoshi/Todo-List.svg?branch=master)](hhttps://travis-ci.com/github/mekhalajoshi/Todo-List/builds)
 
 The ToDo List is built using React and AWS's serverless architecture. <a href="https://mekhalajoshi.github.io/Todo-List" target="_blank">Demo it here!</a>
 
@@ -38,6 +38,7 @@ To run this project, install it locally using npm and navigate to the directory:
 $ npm install
 $ npm start
 ```
+Then navigate to "https://localhost:3000" to view app on the browser.
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
