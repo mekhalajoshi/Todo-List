@@ -1,5 +1,5 @@
 
-# ToDo-List [![Build Status](https://travis-ci.com/mekhalajoshi/Todo-List.svg?branch=master)](hhttps://travis-ci.com/github/mekhalajoshi/Todo-List/builds)
+# ToDo-List [![Build Status](https://travis-ci.com/mekhalajoshi/Todo-List.svg?branch=master)](https://travis-ci.com/github/mekhalajoshi/Todo-List/builds)
 
 The ToDo List is built using React and AWS's serverless architecture. <a href="https://mekhalajoshi.github.io/Todo-List" target="_blank">Demo it here!</a>
 
