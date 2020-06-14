@@ -19,7 +19,7 @@ Project is created with:
 
 
 ## How it Works
-The front-end web application is built with in React. This repository contains the code for all the html, css and javascript that make up the front end of the application. It uses 'Symantic UI React'.
+The front-end web application is built with React. This repository contains the code for all the html, css and javascript that make up the front end of the application. It uses 'Symantic UI React'.
 
 
 The back end uses AWS's serverless architectures. Find the back-end services in <a href="https://github.com/mekhalajoshi/todo-aws-service" target="_blank">this repository!</a>
